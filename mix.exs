@@ -58,7 +58,7 @@ defmodule ExTenant.MixProject do
     [
       {:ecto, "~> 3.9.4"},
       {:postgrex, "~> 0.16.5", only: :test},
-      {:ecto_sql, "~> 3.9.2"},
+      {:ecto_sql, "~> 3.9.4"},
       {:myxql, "~> 0.6.3", only: :test},
       {:ex_doc, "~> 0.29.1", only: :dev, runtime: false}
     ]

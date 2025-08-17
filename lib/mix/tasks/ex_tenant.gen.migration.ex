@@ -34,26 +34,32 @@ defmodule Mix.Tasks.ExTenant.Gen.Migration do
     no_umbrella!("ex_tenant.gen.migration")
     repos = parse_repo(args)
 
-    Enum.each repos, fn repo ->
+    Enum.each(repos, fn repo ->
       case OptionParser.parse(args, switches: @switches) do
         {opts, [name], _} ->
           ensure_repo(repo, args)
           path = Path.relative_to(tenanted_migrations_path(repo), Mix.Project.app_path())
           file = Path.join(path, "#{timestamp()}_#{underscore(name)}.exs")
-          create_directory path
+          create_directory(path)
 
           tenant_field = :tenant_id
           doc = tenant_assoc(tenant_field)
 
-          assigns = [mod: Module.concat([repo, TenantMigrations, camelize(name)]),
-                     change: opts[:change], doc: doc]
+          assigns = [
+            mod: Module.concat([repo, TenantMigrations, camelize(name)]),
+            change: opts[:change],
+            doc: doc
+          ]
 
-          create_file file, migration_template(assigns)
+          create_file(file, migration_template(assigns))
+
         {_, _, _} ->
-          Mix.raise "expected ex_tenant.gen.migration arg = migration-file-name, " <>
-                    "got: #{inspect Enum.join(args, " ")}"
+          Mix.raise(
+            "expected ex_tenant.gen.migration arg = migration-file-name, " <>
+              "got: #{inspect(Enum.join(args, " "))}"
+          )
       end
-    end
+    end)
   end
 
   defp timestamp do
@@ -61,14 +67,14 @@ defmodule Mix.Tasks.ExTenant.Gen.Migration do
     "#{y}#{pad(m)}#{pad(d)}#{pad(hh)}#{pad(mm)}#{pad(ss)}"
   end
 
-  defp pad(i) when i < 10, do: << ?0, ?0 + i >>
+  defp pad(i) when i < 10, do: <<?0, ?0 + i>>
   defp pad(i), do: to_string(i)
 
   defp tenant_assoc(field) do
     "\n\t\t add :#{field}, references(:tenants, column: :#{field}), null: false"
   end
 
-  embed_template :migration, """
+  embed_template(:migration, """
     defmodule <%= inspect @mod %> do
       @moduledoc \"""
         <%= @doc %>
@@ -78,6 +84,5 @@ defmodule Mix.Tasks.ExTenant.Gen.Migration do
       def change do        
       end
     end
-  """
-
+  """)
 end

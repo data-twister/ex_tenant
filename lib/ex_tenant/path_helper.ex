@@ -3,7 +3,8 @@ defmodule ExTenant.PathHelper do
     retrieve the tenanted migrations path using a default fallback
   """
 
-  @migrations_folder Application.compile_env(:ex_tenant, :migrations_folder) || "tenanted_migrations"
+  @migrations_folder Application.compile_env(:ex_tenant, :migrations_folder) ||
+                       "tenanted_migrations"
 
   @doc """
     ## Parameters
