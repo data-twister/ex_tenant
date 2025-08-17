@@ -139,6 +139,8 @@ defmodule ExTenant do
             raise ExTenant.TenantNotSetError
         end
       end
+
+      defoverridable prepare_query: 3
     end
   end
 
