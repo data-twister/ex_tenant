@@ -53,6 +53,20 @@ Repo
         adapter: Ecto.Adapters.Postgres,
         tenanted_field: "tenant_id"
       ]
+      
+  
+#  def prepare_query(_operation, query, opts) do
+#    cond do
+#      # skip doing tenant things for any operations against the OBAN schema
+#
+#      opts[:prefix] == "oban" ->
+#        {query, opts}
+#
+#      # skip doing tenant things for schema_migrations and operations specifically opting out
+#      opts[:skip_tenant_id] || opts[:schema_migration] ->
+#        {query, opts}
+#    end
+#  end
   end
 ```
 
